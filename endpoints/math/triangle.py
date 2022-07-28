@@ -10,7 +10,6 @@ class AreaGetSchema(Schema):
 
 
 class Area(Resource):
-
     """Endpoint to calculate area of triangle based on height and base."""
 
     _get_schema = AreaGetSchema()

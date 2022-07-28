@@ -2,7 +2,6 @@ from flask_restful import Resource
 
 
 class Version(Resource):
-
     """Serves a version string."""
 
     def __init__(self, version) -> None:

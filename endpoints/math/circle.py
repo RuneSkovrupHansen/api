@@ -12,6 +12,8 @@ Documentation: https://marshmallow.readthedocs.io/en/stable/
 Example: https://stackoverflow.com/a/30779996/13308972
 """
 
+# curl command to call radius endpoint
+# curl -X GET 127.0.0.1:5000/math/circle/radius -d '{"circumference": "4.0"}' -H 'Content-Type: application/json'
 
 class CircumferenceGetSchema(Schema):
     """Schema for GET method of circumference resource."""
@@ -19,7 +21,6 @@ class CircumferenceGetSchema(Schema):
 
 
 class Circumference(Resource):
-
     """Endpoint to calculate circumference of a circle based on radius."""
 
     _get_schema = CircumferenceGetSchema()
@@ -44,7 +45,6 @@ class RadiusGetSchema(Schema):
 
 
 class Radius(Resource):
-
     """Endpoint to calculate radius of a circle based on radius."""
 
     _get_schema = RadiusGetSchema()
