@@ -1,5 +1,4 @@
 import functools
-import json
 
 from flask import request
 from flask_restful import Resource, abort
@@ -92,7 +91,7 @@ class User(Resource):
 
 
 class UserListGetDeleteSchema(Schema):
-    id = fields.Integer(required=True)
+    id = fields.Integer(validate=validate_id_exists, required=True)
 
 
 class UserListPutSchema(Schema):
@@ -136,8 +135,15 @@ class UserList(Resource):
 
     @abort_validator(_get_delete_schema)
     def delete(self):
-        print(request.json)
-        pass
+
+        global user_list
+
+        id_list = []
+        for item in request.json:
+            id_list.append(item["id"])
+
+        new_list = [user for user in user_list if user["id"] not in id_list]
+        user_list = new_list
 
     # curl command to trigger name validator error
     # curl -X PUT 127.0.0.1:5000/user -d '[{"id": "0", "name": "Rune Hansen"}, {"id": "1"}]' -H 'Content-Type: application/json'
@@ -147,6 +153,8 @@ class UserList(Resource):
 
     @abort_validator(_put_schema)
     def put(self):
+
+        global user_list
 
         response = []
         for item in request.json:
