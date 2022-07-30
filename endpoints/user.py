@@ -106,6 +106,9 @@ def abort_on_invalid_id(func):
 
 class User(Resource):
 
+    # Valid curl command
+    # curl -X GET 127.0.0.1:5000/user/1
+
     @abort_on_invalid_id
     def get(self, id):
         return user_list[get_id_index(id)]
