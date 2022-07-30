@@ -1,8 +1,9 @@
 import functools
+import json
 
 from flask import request
 from flask_restful import Resource, abort
-from marshmallow import Schema, fields, validate, ValidationError
+from marshmallow import Schema, fields, validate, ValidationError, validates_schema
 
 """It is common for a resource, such as a user, to have two endpoints.
 One endpoint to modify a single entry, and one entry to modify
@@ -31,6 +32,16 @@ Note that /user/<user_id> cannot support the POST method, since POST is used
 to add a new value and the endpoint already has an id.
 """
 
+"""Validation
+
+Use built-in validation methods
+https://marshmallow.readthedocs.io/en/stable/marshmallow.validate.html#api-validators
+
+Schema-level validation used to validate the relation between data
+https://marshmallow.readthedocs.io/en/stable/extending.html#schema-level-validation
+"""
+
+# Mock data
 user_list = [
     {"id": "0", "name": "John", "age": "30"},
     {"id": "1", "name": "Steve", "age": "41"},
@@ -60,6 +71,14 @@ def abort_validator(schema):
     return decorator
 
 
+def validate_id_exists(value):
+    """Check that an id exists."""
+    for user in user_list:
+        if int(user["id"]) == value:
+            return
+    raise ValidationError("A user with the specified id does not exist.")
+
+
 class User(Resource):
 
     def get(self, user_id):
@@ -78,24 +97,20 @@ class UserListGetDeleteSchema(Schema):
 
 class UserListPutSchema(Schema):
 
-    """Note that only the id is a required attribute for
-    this schema."""
+    id = fields.Integer(validate=validate_id_exists, required=True)
 
-    id = fields.Integer(required=True)
-
-    def validate_no_spaces(s):
-        """Note that the error must be raised."""
-        if " " in s:
-            raise ValidationError("name contains a space")
-
-        print(s)
+    def validate_no_spaces(value):
+        if " " in value:
+            raise ValidationError(f"The specified name contains a space.")
 
     # Use custom validation method
     name = fields.String(validate=validate_no_spaces)
-
-    # Use built-in validation method
-    # https://marshmallow.readthedocs.io/en/stable/marshmallow.validate.html#api-validators
     age = fields.Integer(validate=validate.Range(min=0, max=100))
+
+    @validates_schema
+    def one_or_more(self, data, **kwargs):
+        if "name" not in data and "age" not in data:
+            raise ValidationError("No data passed")
 
 
 class UserListPostSchema(Schema):
@@ -125,13 +140,31 @@ class UserList(Resource):
         pass
 
     # curl command to trigger name validator error
-    # curl -X PUT 127.0.0.1:5000/user -d '[{"id": "0", "name": "rune hansen"}, {"id": "1"}]' -H 'Content-Type: application/json'
+    # curl -X PUT 127.0.0.1:5000/user -d '[{"id": "0", "name": "Rune Hansen"}, {"id": "1"}]' -H 'Content-Type: application/json'
+
+    # valid curl command
+    # curl -X PUT 127.0.0.1:5000/user -d '[{"id": "0", "name": "Rune"}, {"id": "1", "age": "29"}]' -H 'Content-Type: application/json'
 
     @abort_validator(_put_schema)
     def put(self):
-        print("PUT")
-        print(request.json)
-        pass
+
+        response = []
+        for item in request.json:
+
+            id = item["id"]
+            del item["id"]
+
+            # Get user and corresponding index from user_list
+            index, user = next((index, user) for (index, user) in enumerate(
+                user_list) if user["id"] == id)
+
+            for key in item.keys():
+                user[key] = item[key]
+
+            user_list[index] = user
+            response.append(user)
+
+        return response
 
     @abort_validator(_post_schema)
     def post(self):
