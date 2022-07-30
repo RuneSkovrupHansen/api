@@ -26,7 +26,7 @@ api.add_resource(triangle.Area, "/math/triangle/area")
 
 # <int:user_id> matches that part of the url to a variable
 # which is passed to the resource
-api.add_resource(user.User, "/user/<int:user_id>")
+api.add_resource(user.User, "/user/<int:id>")
 api.add_resource(user.UserList, "/user")
 
 
