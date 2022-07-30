@@ -1,2 +1,2 @@
-# api
-Repository for experimenting with APIs
+# flask_restful
+flask_restful and marshmallow example repository
