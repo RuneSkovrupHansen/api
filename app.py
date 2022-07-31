@@ -4,6 +4,7 @@ from flask_restful import Api
 from endpoints.version import Version
 from endpoints.math import circle, triangle
 from endpoints import user
+from endpoints import secret
 
 # Documentation on flask_restful
 # https://flask-restful.readthedocs.io/en/latest/index.html
@@ -28,6 +29,9 @@ api.add_resource(triangle.Area, "/math/triangle/area")
 # which is passed to the resource
 api.add_resource(user.User, "/user/<int:id>")
 api.add_resource(user.UserList, "/user")
+
+api.add_resource(secret.Basic, "/secret/basic")
+api.add_resource(secret.Token, "/secret/token")
 
 
 def main():
