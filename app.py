@@ -18,8 +18,12 @@ parameters 'resource_class_args' and 'resource_class_kwargs'.
 https://flask-restful.readthedocs.io/en/latest/api.html#flask_restful.Api.add_resource
 """
 
+"""Note that all endpoints are added with /api/v1/, this is done
+to reserve to option to change the api version at a later time.
+Could also be used for debugging / deployment."""
+
 api.add_resource(Version, "/api/v1/version",
-                 resource_class_kwargs={"version": "1.0"})
+                 resource_class_kwargs={"major_version": "1", "minor_version": "0"})
 
 api.add_resource(circle.Circumference, "/api/v1/math/circle/circumference")
 api.add_resource(circle.Radius, "/api/v1/math/circle/radius")
