@@ -13,7 +13,8 @@ Example: https://stackoverflow.com/a/30779996/13308972
 """
 
 # curl command to call radius endpoint
-# curl -X GET 127.0.0.1:5000/math/circle/radius -d '{"circumference": "4.0"}' -H 'Content-Type: application/json'
+# curl -X GET 127.0.0.1:5000/api/v1/math/circle/radius -d '{"circumference": "4.0"}' -H 'Content-Type: application/json'
+
 
 class CircumferenceGetSchema(Schema):
     """Schema for GET method of circumference resource."""

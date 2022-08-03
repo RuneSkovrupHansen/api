@@ -1,4 +1,5 @@
 import functools
+import re
 
 from flask import request
 from flask_restful import Resource, abort
@@ -18,17 +19,33 @@ user_credentials = {
 }
 
 
+# Expect "Authorization": "Basic <username>:<password>"
 def basic_authentication(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if not getattr(func, 'authenticated', True):
             return func(*args, **kwargs)
 
-        username = request.headers.get("username", None)
-        if username not in user_credentials:
+        authorization = request.headers.get("Authorization", None)
+        if authorization is None:
             abort(401)
 
-        password = request.headers.get("password", None)
+        split = authorization.strip().split(" ")
+        if len(split) != 2:
+            abort(401)
+
+        if split[0].strip().lower() != 'basic':
+            abort(401)
+
+        try:
+            username, password = split[1].split(':', 1)
+        except:
+            abort(401)
+
+        if username not in user_credentials:
+            print(user_credentials)
+            abort(401)
+
         if password != user_credentials[username]:
             abort(401)
 
@@ -67,7 +84,7 @@ class TokenAuthResource(Resource):
 
 
 # Valid curl command
-# curl -X GET 127.0.0.1:5000/secret/basic -H 'username: steve' -H 'password: qwerty'
+# curl -X GET 127.0.0.1:5000/api/v1/secret/basic -H 'Authorization: Basic steve:qwerty'
 
 class Basic(BasicAuthResource):
 
@@ -75,7 +92,7 @@ class Basic(BasicAuthResource):
         return SECRET
 
 # Valid curl command
-# curl -X GET 127.0.0.1:5000/secret/token -H 'X-Api-Token: qlv3onxe59'
+# curl -X GET 127.0.0.1:5000/api/v1/secret/token -H 'X-Api-Token: qlv3onxe59'
 
 
 class Token(TokenAuthResource):

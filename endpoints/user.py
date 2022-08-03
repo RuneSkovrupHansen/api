@@ -107,7 +107,7 @@ def abort_on_invalid_id(func):
 class User(Resource):
 
     # Valid curl command
-    # curl -X GET 127.0.0.1:5000/user/1
+    # curl -X GET 127.0.0.1:5000/api/v1/user/1
 
     @abort_on_invalid_id
     def get(self, id):
@@ -168,7 +168,7 @@ class UserList(Resource):
     _post_schema = UserListPostSchema(many=True)
 
     # curl command to call endpoint method
-    # curl -X GET 127.0.0.1:5000/user -d '[{"id": "0"}, {"id": "1"}]' -H 'Content-Type: application/json'
+    # curl -X GET 127.0.0.1:5000/api/v1/user -d '[{"id": "0"}, {"id": "1"}]' -H 'Content-Type: application/json'
 
     @ schema_validator(_get_delete_schema)
     def get(self):
@@ -193,10 +193,10 @@ class UserList(Resource):
         user_list = new_list
 
     # curl command to trigger name validator error
-    # curl -X PUT 127.0.0.1:5000/user -d '[{"id": "0", "name": "Rune Hansen"}, {"id": "1"}]' -H 'Content-Type: application/json'
+    # curl -X PUT 127.0.0.1:5000/api/v1/user -d '[{"id": "0", "name": "Rune Hansen"}, {"id": "1"}]' -H 'Content-Type: application/json'
 
     # valid curl command
-    # curl -X PUT 127.0.0.1:5000/user -d '[{"id": "0", "name": "Rune"}, {"id": "1", "age": "29"}]' -H 'Content-Type: application/json'
+    # curl -X PUT 127.0.0.1:5000/api/v1/user -d '[{"id": "0", "name": "Rune"}, {"id": "1", "age": "29"}]' -H 'Content-Type: application/json'
 
     @ schema_validator(_put_schema)
     def put(self):
@@ -222,7 +222,7 @@ class UserList(Resource):
         return response
 
     # Valid curl command
-    # curl -X POST 127.0.0.1:5000/user -d '[{"name": "Rune", "age": "29"}, {"name": "Maria", "age": "27"}]' -H 'Content-Type: application/json'
+    # curl -X POST 127.0.0.1:5000/api/v1/user -d '[{"name": "Rune", "age": "29"}, {"name": "Maria", "age": "27"}]' -H 'Content-Type: application/json'
 
     @ schema_validator(_post_schema)
     def post(self):

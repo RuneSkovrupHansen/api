@@ -18,20 +18,20 @@ parameters 'resource_class_args' and 'resource_class_kwargs'.
 https://flask-restful.readthedocs.io/en/latest/api.html#flask_restful.Api.add_resource
 """
 
-api.add_resource(Version, "/version",
+api.add_resource(Version, "/api/v1/version",
                  resource_class_kwargs={"version": "1.0"})
 
-api.add_resource(circle.Circumference, "/math/circle/circumference")
-api.add_resource(circle.Radius, "/math/circle/radius")
-api.add_resource(triangle.Area, "/math/triangle/area")
+api.add_resource(circle.Circumference, "/api/v1/math/circle/circumference")
+api.add_resource(circle.Radius, "/api/v1/math/circle/radius")
+api.add_resource(triangle.Area, "/api/v1/math/triangle/area")
 
 # <int:user_id> matches that part of the url to a variable
 # which is passed to the resource
-api.add_resource(user.User, "/user/<int:id>")
-api.add_resource(user.UserList, "/user")
+api.add_resource(user.User, "/api/v1/user/<int:id>")
+api.add_resource(user.UserList, "/api/v1/user")
 
-api.add_resource(secret.Basic, "/secret/basic")
-api.add_resource(secret.Token, "/secret/token")
+api.add_resource(secret.Basic, "/api/v1/secret/basic")
+api.add_resource(secret.Token, "/api/v1/secret/token")
 
 
 def main():
