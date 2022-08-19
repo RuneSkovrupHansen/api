@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 from flask import Flask
 from flask_restful import Api
 
@@ -39,7 +41,8 @@ api.add_resource(secret.Token, "/api/v1/secret/token")
 
 
 def main():
-    app.run(debug=True)
+    # Specify host as "0.0.0.0" to run on all addresses
+    app.run(host="0.0.0.0", debug=True)
 
 
 if __name__ == "__main__":
