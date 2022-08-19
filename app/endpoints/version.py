@@ -13,7 +13,7 @@ class Version(Resource):
     def get(self):
         request_version = request.headers.get("Version", None)
 
-        if request_version == "1.0":
+        if request_version == "1":
             version = ".".join([self.major_version, self.minor_version])
         else:  # Default to newest version
             version = {"major_version": self.major_version,
