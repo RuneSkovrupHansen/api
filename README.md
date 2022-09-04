@@ -40,3 +40,6 @@ Run the test container:
 
 Stop application container:
 `docker container stop app`
+
+Stop network:
+`docker network rm flask_restful`
