@@ -10,12 +10,16 @@ import common
 
 class TestMathEndpoint(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self.api_ip = common.get_api_ip()
+        self.api_port = common.get_api_port()
+
     """Test the math endpoint of the API."""
 
     def test_circle_circumference(self):
 
         radius = 6.2
-        url = f"http://{common.API_IP}:{common.API_PORT}/api/v1/math/circle/circumference"
+        url = f"http://{self.api_ip}:{self.api_port}/api/v1/math/circle/circumference"
         r = requests.get(
             url,
             data=json.dumps({"radius": radius}),
@@ -29,7 +33,7 @@ class TestMathEndpoint(unittest.TestCase):
     def test_circle_radius(self):
 
         circumference = 5
-        url = f"http://{common.API_IP}:{common.API_PORT}/api/v1/math/circle/radius"
+        url = f"http://{self.api_ip}:{self.api_port}/api/v1/math/circle/radius"
         r = requests.get(
             url,
             data=json.dumps({"circumference": circumference}),
@@ -44,7 +48,7 @@ class TestMathEndpoint(unittest.TestCase):
 
         height = 4
         base = 6
-        url = f"http://{common.API_IP}:{common.API_PORT}/api/v1/math/triangle/area"
+        url = f"http://{self.api_ip}:{self.api_port}/api/v1/math/triangle/area"
         r = requests.get(
             url,
             data=json.dumps({"height": height, "base": base}),
@@ -58,12 +62,16 @@ class TestMathEndpoint(unittest.TestCase):
 
 class TestVersionEndpoint(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self.api_ip = common.get_api_ip()
+        self.api_port = common.get_api_port()
+
     """Test the version endpoint of the API."""
 
     def test_v1(self):
         """Check that API servers version as a string with the form <major_version>.<minor_version> for version 1 requests"""
 
-        url = f"http://{common.API_IP}:{common.API_PORT}/api/v1/version"
+        url = f"http://{self.api_ip}:{self.api_port}/api/v1/version"
         r = requests.get(url, headers={"Version": "1"})
 
         self.assertEqual(r.status_code, 200)
@@ -73,7 +81,7 @@ class TestVersionEndpoint(unittest.TestCase):
     def test_v2(self):
         """Test that API serves version as a dict with keys 'major_version' and 'minor_version' for version 2 requests."""
 
-        url = f"http://{common.API_IP}:{common.API_PORT}/api/v1/version"
+        url = f"http://{self.api_ip}:{self.api_port}/api/v1/version"
         r = requests.get(url, headers={"Version": "2"})
 
         self.assertEqual(r.status_code, 200)
@@ -84,7 +92,7 @@ class TestVersionEndpoint(unittest.TestCase):
     def test_v1_v2_equality(self):
         """Test that the API serves the same version for version 1 and 2 requests."""
 
-        url = f"http://{common.API_IP}:{common.API_PORT}/api/v1/version"
+        url = f"http://{self.api_ip}:{self.api_port}/api/v1/version"
 
         response_v1 = requests.get(url, headers={"Version": "1"})
         response_v2 = requests.get(url, headers={"Version": "2"})

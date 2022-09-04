@@ -10,6 +10,8 @@ class Version(Resource):
         self.minor_version = minor_version
         super().__init__()
 
+    # curl -X GET 127.0.0.1:5000/api/v1/version -H 'X-Api-Token: qlv3onxe59'
+
     def get(self):
         request_version = request.headers.get("Version", None)
 
